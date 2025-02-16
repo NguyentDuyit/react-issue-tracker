@@ -85,7 +85,18 @@ export function reducer(state = initState, { type, payload }) {
         }
 
         case "ORDER_BY": {
-
+            // const newData ...;
+            // newData..sort((a, b) => {
+            //     if (orderBy == "asc") {
+            //         return a - b
+            //     } else if (orderBy == "des") {
+            //         return b - a
+            //     }
+            // })
+            // return {
+            //     ...state,
+            //     axiosData: newData
+            // }
         }
 
         case "ADD_DATA": {
@@ -103,9 +114,11 @@ export function reducer(state = initState, { type, payload }) {
         }
 
         case "CLOSE_TODO": {
-            const indexOf = state.axiosData.findIndex(item => item._id == payload)
-            const deepClone = state.axiosData
-            deepClone[indexOf].status = "Close"
+            // const deepClone = state.axiosData
+            // const cloneTodos = [...state.axiosData]; // shallow clone
+            const cloneTodos = JSON.parse(JSON.stringify(state.axiosData)); // deep clone
+            const indexOf = cloneTodos.findIndex(item => item._id == payload)
+            cloneTodos[indexOf].status = "Close"
             return {
                 ...state,
                 axiosData: deepClone

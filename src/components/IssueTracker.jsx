@@ -103,19 +103,48 @@ function IssueTracker() {
     }
 
     useEffect(() => {
-        try {
-            axios.get(api)
-                .then((response) => {
-                    dispatch(showLoading())
-                    dispatch(_axiosData(response.data.data))
-                    setTimeout(() => {
-                        dispatch(hideLoading())
-                    }, 2000);
-                })
-        } catch (errors) {
-            console.log(errors)
+        // Duy
+        // try {
+        //     axios.get(api)
+        //         .then((response) => {
+        //             dispatch(showLoading()); // show loading
+        //             dispatch(_axiosData(response.data.data)); //0.1s
+
+        //             // 2s -> hide loading
+        //             setTimeout(() => {
+        //                 dispatch(hideLoading())
+        //             }, 2000);
+        //         })
+        // } catch (errors) {
+        //     console.log(errors)
+        // }
+
+        // Refactor code
+        // axios (promise then)
+        // dispatch(showLoading()); // show loading
+        // axios.get(api)
+        //     .then((response) => {
+        //         dispatch(_axiosData(response.data.data)); //0.1s
+        //     })
+        //     .catch(err => {
+        //         console.log('error: ', err)
+        //     })
+        //     .finally(() => {
+        //         dispatch(hideLoading())
+        //     }) 
+
+        // async await
+        dispatch(showLoading()); // show loading
+        async function fetchTodos() {
+            const response = await axios.get(api);
+            dispatch(_axiosData(response.data.data)); //0.1s
+            dispatch(hideLoading())
         }
+        fetchTodos();
     }, [])
+
+    // async: first load -> show loading -> call api -> hide loading
+    // promise, async await
 
     return (
         <>
