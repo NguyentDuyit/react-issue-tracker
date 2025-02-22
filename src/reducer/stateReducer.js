@@ -1,19 +1,20 @@
 export const initState = {
-    axiosData: [],
-    isLoading: false
+    getData: [],
+    isLoading: false,
+    cloneData: [],
 }
 
-export const _axiosData = (todoItem) => {
+export const _getData = (todoList) => {
     return {
-        type: "AXIOS_DATA",
-        payload: todoItem
+        type: "GET_DATA",
+        payload: todoList
     }
 }
 
-export const _filterTodo = (filterKeyword) => {
+export const _filterByTodo = (filtKeyWord) => {
     return {
-        type: "FILTER_TODO",
-        payload: filterKeyword
+        type: "FILTER_BY_TODO",
+        payload: filtKeyWord
     }
 }
 
@@ -33,7 +34,7 @@ export const _orderBy = (orderKeyWord) => {
 
 export const _addTodo = (todoItem) => {
     return {
-        type: "ADD_DATA",
+        type: "ADD_TODO",
         payload: todoItem
     }
 }
@@ -45,7 +46,6 @@ export const deleteTodo = (todoId) => {
     }
 }
 
-
 export const closeTodo = (todoId) => {
     return {
         type: "CLOSE_TODO",
@@ -53,13 +53,11 @@ export const closeTodo = (todoId) => {
     }
 }
 
-
 export const showLoading = () => {
     return {
         type: "SHOW_LOADING",
     }
 }
-
 
 export const hideLoading = () => {
     return {
@@ -69,59 +67,78 @@ export const hideLoading = () => {
 
 export function reducer(state = initState, { type, payload }) {
     switch (type) {
-        case "AXIOS_DATA": {
+        case "GET_DATA": {
             return {
                 ...state,
-                axiosData: payload
+                getData: payload,
+                cloneData: payload
             }
         }
 
         case "SEARCH_TODO": {
-
+            return {
+                ...state,
+                getData: state.cloneData.filter(item => item["title"].toLowerCase().includes(payload))
+            }
         }
 
-        case "FILTER_TODO": {
-
+        case "FILTER_BY_TODO": {
+            if (payload !== "All") {
+                return {
+                    ...state,
+                    getData: state.cloneData.filter(item => item["status"] == payload)
+                }
+            } else {
+                return {
+                    ...state,
+                    getData: state.cloneData
+                }
+            }
         }
 
         case "ORDER_BY": {
-            // const newData ...;
-            // newData..sort((a, b) => {
-            //     if (orderBy == "asc") {
-            //         return a - b
-            //     } else if (orderBy == "des") {
-            //         return b - a
-            //     }
-            // })
-            // return {
-            //     ...state,
-            //     axiosData: newData
-            // }
+            if (payload == "asc") {
+                return {
+                    ...state,
+                    getData: state.getData.sort((a, b) => {
+                        return a.title.localeCompare(b.title)
+                    })
+                }
+            } else if (payload == "des") {
+                return {
+                    ...state,
+                    getData: state.getData.sort((a, b) => {
+                        return b.title.localeCompare(a.title)
+                    })
+                }
+            }
         }
 
-        case "ADD_DATA": {
-            return {
-                ...state,
-                axiosData: [...state.axiosData, payload]
+        case "ADD_TODO": {
+            if (payload.title) {
+                return {
+                    ...state,
+                    getData: [...state.getData, payload],
+                    cloneData: [...state.getData, payload]
+                }
             }
         }
 
         case "DELETE_TODO": {
             return {
                 ...state,
-                axiosData: state.axiosData.filter(item => item._id !== payload)
+                getData: state.getData.filter(item => item._id !== payload)
             }
         }
 
         case "CLOSE_TODO": {
-            // const deepClone = state.axiosData
             // const cloneTodos = [...state.axiosData]; // shallow clone
-            const cloneTodos = JSON.parse(JSON.stringify(state.axiosData)); // deep clone
+            const cloneTodos = JSON.parse(JSON.stringify(state.getData)); // deep clone
             const indexOf = cloneTodos.findIndex(item => item._id == payload)
             cloneTodos[indexOf].status = "Close"
             return {
                 ...state,
-                axiosData: deepClone
+                getData: cloneTodos
             }
         }
 
