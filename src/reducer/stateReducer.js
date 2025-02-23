@@ -115,12 +115,10 @@ export function reducer(state = initState, { type, payload }) {
         }
 
         case "ADD_TODO": {
-            if (payload.title) {
-                return {
-                    ...state,
-                    getData: [...state.getData, payload],
-                    cloneData: [...state.getData, payload]
-                }
+            return {
+                ...state,
+                getData: [...state.getData, payload],
+                cloneData: [...state.getData, payload]
             }
         }
 

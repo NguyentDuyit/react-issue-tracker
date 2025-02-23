@@ -20,6 +20,7 @@ export const IssueProvider = ({ children }) => {
     const { isLoading } = state
 
     async function fetchTodos() {
+        dispatch(showLoading())
         const response = await axios.get(api);
         dispatch(_getData(response.data.data))
         dispatch(hideLoading())
@@ -28,13 +29,15 @@ export const IssueProvider = ({ children }) => {
     async function addItemTodo(item) {
         dispatch(showLoading())
         const response = await axios.post(api, item)
-        dispatch(_addTodo(response.data.data))
+        if(response.data.data.title) {
+            dispatch(_addTodo(response.data.data))
+        }
         dispatch(hideLoading())
     }
 
     async function deleteItem(id) {
         dispatch(showLoading())
-        const response = await axios.delete(api + id)
+        await axios.delete(api + id)
         dispatch(deleteTodo(id))
         dispatch(hideLoading())
     }
@@ -50,12 +53,13 @@ export const IssueProvider = ({ children }) => {
                 status: "Close"
             }
         }
-        const response = await axios.put(api + item._id, dataPost)
+        await axios.put(api + item._id, dataPost)
         dispatch(closeTodo(item._id))
         dispatch(hideLoading())
     }
 
     function searchTodo(keyword) {
+        console.log('earch')
         dispatch(_searchTodo(keyword))
     }
 
@@ -67,7 +71,6 @@ export const IssueProvider = ({ children }) => {
         dispatch(_orderBy(keyword))
     }
     useEffect(() => {
-        dispatch(showLoading())
         fetchTodos()
     }, [])
 

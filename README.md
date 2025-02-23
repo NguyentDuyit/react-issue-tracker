@@ -9,9 +9,15 @@ Currently, two official plugins are available:
 
 
 Feedback:
-- Cách đặt tên các function 
-- Tách action in reducer
-- Sửa lại cách xử lý async, await
+- chia component ra:
+    - InputField
+    - SelectField
+    - IssueForm
+    - IssueList
+    - Button
+- clear error form when add
+- apply useDebounce for search
+- move code logic ra khỏi reducer
 
 
 
@@ -25,3 +31,4 @@ Brainstormgit
     - defaultData -> filter All -> update todos -> A, B, C
     - create action
     -
+
